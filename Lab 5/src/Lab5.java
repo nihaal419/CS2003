@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class Lab5 {
 
@@ -18,7 +21,22 @@ public class Lab5 {
 	}
 	
 	public static void main(String [] args) {
-		String name = "Able was I ere I saw Elba";
-		System.out.println(isaPalindrome(name));
+		try {
+			File inputFile = new File("words.dat");
+			Scanner file = new Scanner(inputFile);
+			long startTime = System.currentTimeMillis();
+			while(file.hasNext()) {
+				String next = file.next();
+				System.out.println(next + ": " + isaPalindrome(next));
+			}
+			long endTime = System.currentTimeMillis();
+			long finalTime = endTime - startTime;
+			System.out.println("It took " + finalTime + "ms to read through and check palindromes");
+		}
+		catch(IOException e) {
+			System.err.println("IOException in reading input file!!!");
+		}
+//		String name = "Able was I ere I saw Elba";
+//		System.out.println(isaPalindrome(name));
 	}
 }
