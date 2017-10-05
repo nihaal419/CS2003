@@ -1,0 +1,8 @@
+The overall layout of the generated code using umple and my code was similar. A difference I noted was that
+the umple code returned boolean for set methods based on whether or not the variable was set. The umple code
+also created a toString method.
+
+The plugin can be useful to create quick templates for a class file you're going to use, because it was much
+quicker to create the umple code and generate the java code than for me to create the template myself. The 
+best way I think for me to use UML code is to use it as a visual outline for a project I am working on. Umple
+code can then be used to generate code based on that diagram. 

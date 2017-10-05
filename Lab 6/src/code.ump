@@ -1,0 +1,26 @@
+class Customer
+{
+       
+fname;
+  lname;
+  int zipCode;
+  int phoneNumber;
+}
+
+class Account
+{
+    isA Customer;
+int custID;
+  userID;
+  password;
+  Order lastOrder;
+    }
+
+class Order
+{
+    isA Account;
+int creationDate;
+  item;
+  int orderID;
+  double total;
+}
