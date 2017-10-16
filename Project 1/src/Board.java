@@ -1,3 +1,4 @@
+import java.io.Console;
 import java.util.Scanner;
 
 /**
@@ -12,6 +13,8 @@ public class Board {
 	char [][] board = new char[8][8];
 	/**Used to insert a piece and first validate move before adding piece to actual board and printing to screen*/
 	char [][] grid = new char[8][8];
+	/**Keeps track of if the current player is a computer*/
+	boolean currentPlayer;
 	
 	/**
 	 * Initializes the board class which holds methods to interact
@@ -28,7 +31,7 @@ public class Board {
 		grid[3][4] = 'B';
 		grid	[4][4] = 'W';
 		
-		paintBoard();
+		//paintBoard();
 	}
 	
 	/**
@@ -109,9 +112,154 @@ public class Board {
 	}
 	
 	/**
-	 * Method which uses all other methods to check if move is valid, takes in the row and column where player would like to place piece and continues play
+	 * Used to check if the position on the board is valid or not
+	 * @param entry is the number entered for row or column placement
+	 * @throws InvalidInputException
+	 */
+	private void validate(int entry) throws InvalidInputException{
+		if(entry<0 || entry>7) {
+			throw new InvalidInputException("Not a valid input!");
+		}
+	}
+	
+	/**
+	 * Figures out which type of game is to be played then redirects play
 	 */
 	public void play() {
+		Scanner console = new Scanner(System.in);
+		
+		System.out.println("Enter S for single player, M for multiplayer, C for computer simulation:");
+		String playType = console.next();
+		
+		paintBoard();
+		
+		if(playType.equalsIgnoreCase("S")) {
+			singlePlay();
+		}
+		else if(playType.equalsIgnoreCase("M")) {
+			multiPlay();
+		}
+		else if(playType.equalsIgnoreCase("C")) {
+			computePlay();
+		}
+		else {
+			System.out.println("That is not a valid type of play!");
+			play();
+		}
+		console.close();
+	}
+	
+	/**
+	 * Creates a simulated game with two computer players
+	 */
+	private void computePlay() {
+		ComputerPlayer computer1 = new ComputerPlayer();
+		ComputerPlayer computer2 = new ComputerPlayer();
+		
+		char move = 'B';
+		currentPlayer = true;
+		
+		System.out.println("Black players turn");
+		
+		while(!gameOver()) {
+			status(move);
+			int row = 0;
+			int col = 0;
+			boolean valid = false;
+			
+			while(!valid) {
+				if(move == 'B') {
+					col = computer1.pickCol();
+					row = computer1.pickRow();
+					valid = validMove(move,row,col);
+				}
+				if(move == 'W') {
+					col = computer2.pickCol();
+					row = computer2.pickRow();
+					valid = validMove(move,row,col);
+				}
+			}
+			
+			turn(move, row, col);
+			
+			if(move == 'B') {
+				move = 'W';
+				System.out.println("White players turn");
+			}
+			else {
+				move = 'B';
+				System.out.println("Black players turn");
+			}
+		}
+		endGame();
+	}
+	
+	/**
+	 * Creates a game with a simulated player vs human player, simulated player selects random spots on the board.
+	 */
+	private void singlePlay() {
+		ComputerPlayer computer = new ComputerPlayer();
+		Scanner console = new Scanner(System.in);
+		
+		char move = 'B';
+		currentPlayer = false;
+		
+		System.out.println("Black players turn");
+		
+		while(!gameOver()) {
+			status(move);
+			int row = 0;
+			int col = 0;
+			boolean valid = false;
+			
+			while(!valid) {
+				if(move == 'B') {
+					System.out.println("Enter the row you would like to place your piece at: ");
+					col = console.nextInt() - 1;
+					try {
+						validate(col);
+					}
+					catch(InvalidInputException e) {
+						System.err.println(e);
+					}
+					System.out.println("Enter the column you would like to place your piece at: ");
+					row = console.nextInt() - 1;
+					try {
+						validate(row);
+					}
+					catch(InvalidInputException e) {
+						System.err.println(e);
+					}
+					valid = validMove(move,row,col);
+				}
+				if(move == 'W') {
+					col = computer.pickCol();
+					row = computer.pickRow();
+					valid = validMove(move,row,col);
+				}
+			}
+			
+			turn(move, row, col);
+			
+			if(move == 'B') {
+				move = 'W';
+				currentPlayer = true;
+				System.out.println("White players turn");
+			}
+			else {
+				move = 'B';
+				currentPlayer = false;
+				System.out.println("Black players turn");
+			}
+		}
+		console.close();
+		endGame();
+	}
+	
+	/**
+	 * Called when player wants to play a game controlling both sides.
+	 */
+	private void multiPlay(){
 		Scanner console = new Scanner(System.in);
 		char move = 'B';
 		
@@ -126,8 +274,20 @@ public class Board {
 			while(!valid) {
 				System.out.println("Enter the row you would like to place your piece at: ");
 				col = console.nextInt() - 1;
+				try {
+					validate(col);
+				}
+				catch(InvalidInputException e) {
+					System.err.println(e);
+				}
 				System.out.println("Enter the column you would like to place your piece at: ");
 				row = console.nextInt() - 1;
+				try {
+					validate(row);
+				}
+				catch(InvalidInputException e) {
+					System.err.println(e);
+				}
 				valid = validMove(move,row,col);
 			}
 			
@@ -189,7 +349,13 @@ public class Board {
 			}
 		}
 		if(valid == false) {
-			System.out.println("Not a valid input. Try again:");
+			if(currentPlayer) {
+				
+			}
+			else {
+				System.out.println("Not a valid input. Try again:");
+			}
+			
 		}
 		return valid;
 	}
@@ -230,7 +396,7 @@ public class Board {
 		int currentRow = row + rowDir;
 		int currentCol = col + colDir;
 		
-		if(currentRow == 8 || currentCol == 8 || currentRow == 0 || currentCol == 0) {
+		if(currentRow == 8 || currentCol == 8 || currentRow == -1 || currentCol == -1) {
 			return;
 		}
 		
