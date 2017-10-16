@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 /**
  * @author Nihaal Manesia
- * @version 1.0
+ * @version 2.0
  * @since 9/5/2017
  */
 
