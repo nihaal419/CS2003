@@ -22,20 +22,23 @@ public class Simulation {
 		
 		while(!construction.isMaxed()) {
 			Car car = new Car();
-			if(!highway.isEmpty()) {
-				Queue temp = new Queue();
-				while(!highway.isEmpty()) {
-					Car tmp = (Car) highway.deQueue();
-					if(tmp.getTime() >= 12) {
-						construction.enQueue(tmp);
-						speed(tmp);
+			if(count<10) {
+				if(!highway.isEmpty()) {
+					Queue temp = new Queue();
+					while(!highway.isEmpty()) {
+						Car tmp = (Car) highway.deQueue();
+						//System.out.println(tmp.getTime());
+						if(tmp.getTime() >= 12) {
+							construction.enQueue(tmp);
+							speed(tmp);
+						}
+						else {
+							temp.enQueue(tmp);
+						}
 					}
-					else {
-						temp.enQueue(tmp);
+					while(!temp.isEmpty()) {
+						highway.enQueue(temp.deQueue());
 					}
-				}
-				while(!temp.isEmpty()) {
-					highway.enQueue(temp.deQueue());
 				}
 			}
 			car.setStartTime(1000*System.currentTimeMillis());
@@ -49,7 +52,7 @@ public class Simulation {
 					if(((Car) construction.peek()).getTime() >= 6.6) {
 						Car temp = (Car) construction.deQueue();
 						numcars++;
-						System.out.println("Car #" + numcars + "Time: " + temp.getTime());
+						System.out.println("Car #" + numcars + " - Time: " + temp.getTime());
 						speed();
 					}
 				}
@@ -57,7 +60,7 @@ public class Simulation {
 					if(((Car) construction.peek()).getTime() >= 8.8) {
 						Car temp = (Car) construction.deQueue();
 						numcars++;
-						System.out.println("Car #" + numcars + "Time: " + temp.getTime());
+						System.out.println("Car #" + numcars + " - Time: " + temp.getTime());
 						speed();
 					}
 				}
@@ -65,7 +68,7 @@ public class Simulation {
 					if(((Car) construction.peek()).getTime() >= 13.3) {
 						Car temp = (Car) construction.deQueue();
 						numcars++;
-						System.out.println("Car #" + numcars + "Time: " + temp.getTime());
+						System.out.println("Car #" + numcars + " - Time: " + temp.getTime());
 						speed();
 					}
 				}
@@ -73,7 +76,7 @@ public class Simulation {
 					if(((Car) construction.peek()).getTime() >= 26.6) {
 						Car temp = (Car) construction.deQueue();
 						numcars++;
-						System.out.println("Car #" + numcars + "Time: " + temp.getTime());
+						System.out.println("Car #" + numcars + " - Time: " + temp.getTime());
 						speed();
 					}
 				}

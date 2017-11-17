@@ -20,6 +20,6 @@ public class Car {
 	}
 	
 	public long getTime() {
-		return System.currentTimeMillis() - starttime;
+		return starttime - System.currentTimeMillis();
 	}
 }
